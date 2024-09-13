@@ -1,7 +1,15 @@
-export function html({ url, host, email }) {
-    const escapedEmail = `${email.replace(/\./g, "&#8203;.")}`;
-    const escapedHost = `${host.replace(/\./g, "&#8203;.")}`;
-    return `
+export function html({
+  url,
+  host,
+  email,
+}: {
+  url: string;
+  host: any;
+  email: string;
+}) {
+  const escapedEmail = `${email.replace(/\./g, "&#8203;.")}`;
+  const escapedHost = `${host.replace(/\./g, "&#8203;.")}`;
+  return `
         <body>
             <table width="100%" border="0" cellspacing="20" cellpadding="0" style="background-color: #f9f9f9; text-align: center;">
                 <tr>
@@ -18,6 +26,6 @@ export function html({ url, host, email }) {
     `;
 }
 
-export function text({ url, host }) {
-    return `Sign in to ${host}\n${url}\n\n`;
+export function text({ url, host }: { url: string; host: any }) {
+  return `Sign in to ${host}\n${url}\n\n`;
 }
