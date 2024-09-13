@@ -1,10 +1,8 @@
-import { SignOutButton } from "../components/signout";
+import type { NextPage } from "next";
+import { Content } from "@/app/components/home/content";
 
-export default function Dashboard() {
-    return (
-        <>
-            <h1>Test Dashboard</h1>
-            <SignOutButton />
-        </>
-    )
-}
+const Home: NextPage = () => {
+  return <Content />;
+};
+
+export default Home;

@@ -1,5 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from 'next/navigation'
+import { Providers } from "../providers";
 
 export default async function Dashboard({children}: any) {
     const session = await auth();
@@ -7,11 +8,10 @@ export default async function Dashboard({children}: any) {
         redirect('/login')
     }
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <p>Welcome, {session.user.name}!</p>
-      {children}
-      {/* Contenu du dashboard */}
+    <div className="text-foreground">
+      <Providers>
+       {children}
+      </Providers>
     </div>
   );
 }

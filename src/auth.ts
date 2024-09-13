@@ -15,7 +15,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         Nodemailer({
             server: {
                 host: process.env.EMAIL_SERVER_HOST,
-                port: process.env.EMAIL_SERVER_PORT,
+                port: process.env.EMAIL_SERVER_PORT as any,
                 auth: {
                     user: process.env.EMAIL_SERVER_USER,
                     pass: process.env.EMAIL_SERVER_PASSWORD,
@@ -65,7 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     html: htmlContent,
                 }).then(() => {
                     console.log('Email de vérification envoyé avec succès.');
-                }).catch((error) => {
+                }).catch((error: any) => {
                     console.error('Erreur lors de l\'envoi de l\'email de vérification :', error);
                 });
             },
@@ -76,5 +76,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             // Rediriger vers la page d'accueil après la connexion
             return baseUrl;
         },
+    },
+    pages: {
+        verifyRequest: "/login/verify", // (used for check email message)
     },
 })

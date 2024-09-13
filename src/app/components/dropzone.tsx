@@ -1,68 +1,102 @@
-'use client'
+"use client";
 
-import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { Card, CardBody, ScrollShadow, cn } from "@nextui-org/react";
+import { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import ImageCard from "./image-card";
 
-const Dropzone = () => {
-    const [selectedImages, setSelectedImages] = useState([]);
-
-    const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
-      acceptedFiles.forEach((file) => {
-        setSelectedImages((prevState) => [...prevState, file]);
-      });
-    }, []);
-  
-    const {
-      getRootProps,
-      getInputProps,
-      isDragActive,
-      isDragAccept,
-      isDragReject,
-    } = useDropzone({ onDrop });
-  return (
-    <div className='w-screen'>
-      <div className="bg-red-500 w-full" {...getRootProps()}>
-        <input {...getInputProps()} />
-        {isDragActive ? (
-          <p>Drop file(s) here ...</p>
-        ) : (
-          <p>Drag and drop file(s) here, or click to select files</p>
-        )}
-      </div>
-      <div className='w-full grid grid-cols-4 grid-flow-row gap-4'>
-        {selectedImages.length > 0 &&
-          selectedImages.map((image, index) => (
-            <img src={`${URL.createObjectURL(image)}`} key={index} alt="" />
-          ))}
-      </div>
-      <button onClick={() => console.log(selectedImages)}>Confirm</button>
-    </div>
+const Dropzone = ({
+  selectedImages,
+  setSelectedImages,
+  uploadProgress,
+  uploadInfo,
+}: {
+  selectedImages: any[];
+  setSelectedImages: any;
+  uploadProgress: any[];
+  uploadInfo: any[];
+}) => {
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      setSelectedImages((prevState: any[]) => [...prevState, ...acceptedFiles]);
+    },
+    [setSelectedImages]
   );
-};
 
-const styles = {
-  dropzone: {
-    border: '2px dashed #ddd',
-    borderRadius: '10px',
-    padding: '20px',
-    textAlign: 'center',
-    marginBottom: '20px',
-    cursor: 'pointer',
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '16px',
-    marginTop: '20px',
-  },
-  cardContainer: {
-    flex: '1 0 21%', // Adjust to make sure cards fit well
-    maxWidth: '150px',
-  },
-  image: {
-    width: '100%',
-    textAlign: 'center',
-  },
+  const handleDeleteImage = (index: number) => {
+    setSelectedImages((prevState: any[]) =>
+      prevState.filter((_: any, i: number) => i !== index)
+    );
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  return (
+    <Card
+      className={cn(
+        isDragActive
+          ? "bg-default/50 border-dashed border-primary"
+          : "bg-default border-collapse border-default",
+        "m-auto border-1"
+      )}
+    >
+      <CardBody>
+        <ScrollShadow
+          hideScrollBar
+          className="w-[100%] h-[300px] lg:w-[500px] relative"
+        >
+          {selectedImages.length == 0 && (
+            <div
+              {...getRootProps({
+                className:
+                  "dropzone w-full h-full flex justify-center items-center",
+              })}
+            >
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p className="text-center m-auto">
+                  Dépose le(s) image(s) ici ...
+                </p>
+              ) : (
+                <p className="text-center m-auto">
+                  Glisse-dépose de(s) image(s) ici, ou clique pour en
+                  sélectionner
+                </p>
+              )}
+            </div>
+          )}
+          {selectedImages.length > 0 && (
+            <div className="w-full flex flex-wrap">
+              <div
+                {...getRootProps({
+                  className:
+                    "aspect-square rounded-lg overflow-hidden w-1/2 lg:w-1/3 p-2 flex relative",
+                })}
+              >
+                <input {...getInputProps()} />
+                <div className="m-auto border aspect-square w-full flex rounded-md">
+                  <p className="m-auto">+</p>
+                </div>
+              </div>
+              {selectedImages.map((image: any, index: number) => (
+                <div
+                  key={index}
+                  className="aspect-square rounded-lg overflow-hidden w-1/2 lg:w-1/3 p-2 flex relative"
+                >
+                  <ImageCard
+                    image={image}
+                    onDelete={() => handleDeleteImage(index)}
+                    progress={uploadProgress[index]}
+                    info={uploadInfo[index]}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </ScrollShadow>
+      </CardBody>
+    </Card>
+  );
 };
 
 export default Dropzone;
