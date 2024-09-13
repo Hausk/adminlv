@@ -27,7 +27,7 @@ export default function ModalDropzone() {
     setImages([]); // Efface les images
     setUploadProgress([]); // Réinitialise la progression
     setUploadInfo([]); // Réinitialise les informations
-    onOpenChange(false); // Ferme la modal
+    onOpenChange(); // Ferme la modal
   };
 
   const handleSave = async () => {
@@ -55,7 +55,7 @@ export default function ModalDropzone() {
       setUploadProgress(savedImages.map(() => 100));
       setUploadInfo(savedImages);
       // Fermez la modal après le téléchargement
-      onOpenChange(false);
+      onOpenChange();
     } catch (error) {
       console.error("Error saving images:", error);
     }
